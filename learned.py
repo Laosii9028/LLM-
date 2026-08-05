@@ -13,7 +13,15 @@ from datetime import datetime, timezone, timedelta
 from google import genai
 
 LEARNED_PATH = "taiwan_map_learned.json"
-MODEL = "gemini-2.5-flash"
+MODEL = os.environ.get("GEMINI_LEARNED_MODEL") or "gemini-3.5-flash-lite"
+FALLBACK_MODELS = [
+    m.strip()
+    for m in (
+        os.environ.get("GEMINI_LEARNED_FALLBACK_MODELS")
+        or "gemini-2.5-flash-lite,gemini-2.5-flash"
+    ).split(",")
+    if m.strip()
+]
 
 EXTRACT_PROMPT = """根據以下今天的美股新聞與漲跌個股,找出「美股標的 → 台股供應鏈 / 連動股」的關聯。
 規則:
@@ -62,15 +70,33 @@ def _clean_json(text):
     return t
 
 
+def _model_candidates():
+    seen = set()
+    candidates = []
+    for model in [MODEL, *FALLBACK_MODELS]:
+        if model not in seen:
+            seen.add(model)
+            candidates.append(model)
+    return candidates
+
+
 def propose_and_merge(api_key, news_text, movers_text):
     """呼叫 Gemini 抽關聯,合併進既有的 learned map,存檔並回傳。"""
     client = genai.Client(api_key=api_key)
     prompt = EXTRACT_PROMPT.format(news=news_text, movers=movers_text)
-    try:
-        resp = client.models.generate_content(model=MODEL, contents=prompt)
-        parsed = json.loads(_clean_json(resp.text))
-    except Exception as e:
-        print(f"[warn] 學習新關聯失敗,沿用既有: {e}")
+    parsed = None
+    last_error = None
+    for model in _model_candidates():
+        try:
+            print(f"使用 Gemini 學習模型: {model}")
+            resp = client.models.generate_content(model=model, contents=prompt)
+            parsed = json.loads(_clean_json(resp.text))
+            break
+        except Exception as e:
+            last_error = e
+            print(f"[warn] Gemini 學習模型 {model} 失敗,嘗試下一個: {e}")
+    if parsed is None:
+        print(f"[warn] 學習新關聯失敗,沿用既有: {last_error}")
         return load_learned()
 
     learned = load_learned()

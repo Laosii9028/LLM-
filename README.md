@@ -53,6 +53,27 @@
 | LLM 分析 + 學習 | Google Gemini — https://aistudio.google.com/apikey |
 | 推送 | Discord 頻道設定 → 整合 → Webhook → 建立 → 複製 URL |
 
+### Gemini 模型選擇
+
+預設模型已改成:
+
+| 用途 | 預設模型 | 理由 |
+|------|----------|------|
+| 主早報分析 | `gemini-3.6-flash` | 較新的 Flash 主力模型,適合較完整的推理與中文整理 |
+| 新關聯抽取 | `gemini-3.5-flash-lite` | 較快、配額較寬,適合把新聞轉成 JSON 候選關聯 |
+
+若某個模型配額不足,程式會自動依序 fallback:
+
+- 主早報分析: `gemini-3.6-flash` → `gemini-3.5-flash` → `gemini-2.5-flash`
+- 新關聯抽取: `gemini-3.5-flash-lite` → `gemini-2.5-flash-lite` → `gemini-2.5-flash`
+
+也可以在 GitHub Actions 的 **Variables** 設定:
+
+```text
+GEMINI_ANALYSIS_MODEL
+GEMINI_LEARNED_MODEL
+```
+
 ---
 
 ## 本地先跑一次試試

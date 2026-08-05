@@ -6,9 +6,19 @@
   - 候選(taiwan_map_learned.json):從新聞學習來的,信任度較低,標為候選。
 """
 
+import os
+
 from google import genai
 
-MODEL = "gemini-2.5-flash"
+MODEL = os.environ.get("GEMINI_ANALYSIS_MODEL") or "gemini-3.6-flash"
+FALLBACK_MODELS = [
+    m.strip()
+    for m in (
+        os.environ.get("GEMINI_ANALYSIS_FALLBACK_MODELS")
+        or "gemini-3.5-flash,gemini-2.5-flash"
+    ).split(",")
+    if m.strip()
+]
 
 PROMPT_TEMPLATE = """你是一位專業的美股與台股連動分析師。以下是今天美股收盤的「實際數據與新聞」。
 請「只根據我提供的數據」撰寫一份給散戶看的每日早報,用繁體中文。
@@ -93,6 +103,16 @@ def fmt_news(news):
     return "\n".join(out)
 
 
+def _model_candidates():
+    seen = set()
+    candidates = []
+    for model in [MODEL, *FALLBACK_MODELS]:
+        if model not in seen:
+            seen.add(model)
+            candidates.append(model)
+    return candidates
+
+
 def build_analysis(api_key, indices_text, watchlist_text, gainers_text, losers_text,
                    news_text, map_verified_text, map_learned_text):
     client = genai.Client(api_key=api_key)
@@ -105,5 +125,13 @@ def build_analysis(api_key, indices_text, watchlist_text, gainers_text, losers_t
         map_verified=map_verified_text,
         map_learned=map_learned_text,
     )
-    resp = client.models.generate_content(model=MODEL, contents=prompt)
-    return resp.text
+    last_error = None
+    for model in _model_candidates():
+        try:
+            print(f"使用 Gemini 分析模型: {model}")
+            resp = client.models.generate_content(model=model, contents=prompt)
+            return resp.text
+        except Exception as e:
+            last_error = e
+            print(f"[warn] Gemini 分析模型 {model} 失敗,嘗試下一個: {e}")
+    raise last_error
