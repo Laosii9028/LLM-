@@ -6,11 +6,11 @@
       "緯創 3231",
       "鴻海 2317"
     ],
-    "reason": "NVIDIA 為全球 AI 晶片龍頭，連動台積電晶圆代工及鴻海、廣達等 AI 伺服器代工供應鏈。",
+    "reason": "輝達股價強勢與AI晶片需求帶動台灣晶圓代工與AI伺服器供應鏈",
     "first_seen": "2026-08-05",
-    "seen_count": 5,
+    "seen_count": 6,
     "status": "candidate",
-    "last_seen": "2026-08-05"
+    "last_seen": "2026-08-06"
   },
   "TSM": {
     "stocks": [
@@ -18,11 +18,11 @@
       "台積電 2330",
       "精材 3374"
     ],
-    "reason": "TSM 即為台積電美國 ADR，直接連動台積電台股表現。",
+    "reason": "台積電ADR連動台股現貨表現",
     "first_seen": "2026-08-05",
-    "seen_count": 5,
+    "seen_count": 6,
     "status": "candidate",
-    "last_seen": "2026-08-05"
+    "last_seen": "2026-08-06"
   },
   "MU": {
     "stocks": [
@@ -48,5 +48,16 @@
     "seen_count": 1,
     "status": "candidate",
     "last_seen": "2026-08-05"
+  },
+  "ANET": {
+    "stocks": [
+      "波若威 3163",
+      "華星光 4979"
+    ],
+    "reason": "Arista Networks強漲連動網通及光通訊供應鏈",
+    "first_seen": "2026-08-06",
+    "seen_count": 1,
+    "status": "candidate",
+    "last_seen": "2026-08-06"
   }
 }
