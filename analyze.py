@@ -8,7 +8,7 @@
 
 from google import genai
 
-MODEL = "gemini-2.0-flash"  # 免費層即可;想更強可換 gemini-2.5-flash
+MODEL = "gemini-2.5-flash"  # 免費層即可;想更強可換 gemini-2.5-flash
 
 PROMPT_TEMPLATE = """你是一位專業的美股與台股連動分析師。以下是今天美股收盤的「實際數據與新聞」。
 請「只根據我提供的數據」撰寫一份給散戶看的每日早報,用繁體中文。
