@@ -10,11 +10,11 @@
 ## 它每天會做什麼
 
 1. 抓美股指數(S&P 500 / Nasdaq / 道瓊 / 費半 / VIX / 美債殖利率)
-2. 固定抓重點美股追蹤名單(NVDA / AMD / AVGO / TSM / AAPL / TSLA / SMCI 等)
+2. 固定抓重點美股追蹤名單(NVDA / AMD / AVGO / TSM / AAPL / TSLA / SMCI 等),並計算 1 日 / 5 日 / 20 日漲跌、量比、相對 Nasdaq/SOX 強弱
 3. 抓當日漲幅最大 / 跌幅最大個股
 4. 抓美股重要新聞(含情緒標籤)
 5. **從新聞學習**新的「美股→台股」關聯,累積進 `taiwan_map_learned.json`
-6. 用 Gemini 分析:美股為什麼漲跌、發生了什麼
+6. 用 Gemini 分析:美股為什麼漲跌、發生了什麼;若沒有公司專屬新聞,會用量價與族群強弱做保守推論
 7. 根據「已驗證 + 候選」兩層對應表,判斷可能受影響的台股與方向
 8. 推送到 Discord
 
@@ -161,7 +161,7 @@ GitHub Pages 是靜態網頁,不能安全地內建私密金鑰。做法是你自
 
 ```
 main.py                      # 主流程
-market.py                    # 抓指數 + 重點追蹤美股 + 漲跌榜
+market.py                    # 抓指數 + 重點追蹤美股量價訊號 + 漲跌榜
 news.py                      # 抓新聞
 learned.py                   # ★ 從新聞學習新關聯(免費 Gemini)
 analyze.py                   # Gemini 分析(兩層對應表 + prompt)
