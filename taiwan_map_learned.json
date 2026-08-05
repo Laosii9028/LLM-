@@ -8,7 +8,7 @@
     ],
     "reason": "輝達股價強漲，連動其主要晶片代工與AI伺服器供應鏈",
     "first_seen": "2026-08-05",
-    "seen_count": 3,
+    "seen_count": 4,
     "status": "candidate",
     "last_seen": "2026-08-05"
   },
@@ -18,9 +18,9 @@
       "台積電 2330",
       "精材 3374"
     ],
-    "reason": "台積電ADR表現連動台股權值王台積電及相關半導體供應鏈",
+    "reason": "台積電 ADR 表現連動台股權值王台積電之現股走勢。",
     "first_seen": "2026-08-05",
-    "seen_count": 3,
+    "seen_count": 4,
     "status": "candidate",
     "last_seen": "2026-08-05"
   },
@@ -31,9 +31,9 @@
       "群聯 8299",
       "華邦電 2344"
     ],
-    "reason": "美光股價走強，帶動記憶體族群與相關供應鏈連動",
+    "reason": "美光股價強漲，有利於帶動台灣記憶體族群的市場氣氛。",
     "first_seen": "2026-08-05",
-    "seen_count": 3,
+    "seen_count": 4,
     "status": "candidate",
     "last_seen": "2026-08-05"
   },
