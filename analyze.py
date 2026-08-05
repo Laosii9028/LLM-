@@ -8,7 +8,7 @@
 
 from google import genai
 
-MODEL = "gemini-2.5-flash"  # 免費層即可;想更強可換 gemini-2.5-flash
+MODEL = "gemini-2.5-flash"
 
 PROMPT_TEMPLATE = """你是一位專業的美股與台股連動分析師。以下是今天美股收盤的「實際數據與新聞」。
 請「只根據我提供的數據」撰寫一份給散戶看的每日早報,用繁體中文。
@@ -16,6 +16,9 @@ PROMPT_TEMPLATE = """你是一位專業的美股與台股連動分析師。以�
 
 # 美股指數表現
 {indices}
+
+# 重點追蹤美股(台股供應鏈判斷優先參考)
+{watchlist}
 
 # 今日漲幅最大
 {gainers}
@@ -38,10 +41,11 @@ PROMPT_TEMPLATE = """你是一位專業的美股與台股連動分析師。以�
 3-5 句話總結大盤方向與主要驅動因素(升息 / 財報 / 總經事件等)。
 
 **二、焦點個股**
-挑 3-5 檔漲跌最有代表性的,各用一句話說明為什麼。
+優先從「重點追蹤美股」挑 3-5 檔和台股供應鏈最相關的,各用一句話說明為什麼;若全市場漲跌榜有重大異常,可補充。
 
 **三、對台股的可能影響**
 根據上面兩張對應表判斷,指出哪些台股可能受惠或受壓,標明方向(偏多 / 偏空)與理由。
+請優先使用「重點追蹤美股」裡 NVDA、AMD、AVGO、TSM、AAPL、TSLA、SMCI、MU 等實際漲跌資料判斷台股供應鏈方向。
 優先採用「已驗證」的關聯;若用到「候選」關聯,請註明信心較低。
 明確註明:這是根據連動邏輯的推測,非投資建議。
 
@@ -69,6 +73,16 @@ def fmt_movers(movers):
     )
 
 
+def fmt_watchlist(stocks):
+    if not stocks:
+        return "(無資料)"
+    return "\n".join(
+        f"- {s['ticker']} ({s['name']}): 收 {s['close']}，"
+        f"{'+' if s['pct'] >= 0 else ''}{s['pct']}%，量 {s['volume']:,}"
+        for s in stocks
+    )
+
+
 def fmt_news(news):
     if not news:
         return "(無資料)"
@@ -79,11 +93,12 @@ def fmt_news(news):
     return "\n".join(out)
 
 
-def build_analysis(api_key, indices_text, gainers_text, losers_text,
+def build_analysis(api_key, indices_text, watchlist_text, gainers_text, losers_text,
                    news_text, map_verified_text, map_learned_text):
     client = genai.Client(api_key=api_key)
     prompt = PROMPT_TEMPLATE.format(
         indices=indices_text,
+        watchlist=watchlist_text,
         gainers=gainers_text,
         losers=losers_text,
         news=news_text,

@@ -43,6 +43,9 @@ def main():
     print("抓取漲跌榜...")
     movers = market.fetch_gainers_losers(av_key)
 
+    print("抓取重點美股追蹤名單...")
+    watchlist = market.fetch_watchlist()
+
     print("抓取新聞...")
     articles = news.fetch_news(av_key)
 
@@ -50,7 +53,12 @@ def main():
     news_text = analyze.fmt_news(articles)
     gainers_text = analyze.fmt_movers(movers["gainers"])
     losers_text = analyze.fmt_movers(movers["losers"])
-    movers_text = f"漲幅最大:\n{gainers_text}\n\n跌幅最大:\n{losers_text}"
+    watchlist_text = analyze.fmt_watchlist(watchlist)
+    movers_text = (
+        f"重點追蹤美股:\n{watchlist_text}\n\n"
+        f"漲幅最大:\n{gainers_text}\n\n"
+        f"跌幅最大:\n{losers_text}"
+    )
 
     print("從新聞學習新的台股連動關聯...")
     learned_map = learned.propose_and_merge(gemini_key, news_text, movers_text)
@@ -59,6 +67,7 @@ def main():
     body = analyze.build_analysis(
         gemini_key,
         analyze.fmt_indices(indices),
+        watchlist_text,
         gainers_text,
         losers_text,
         news_text,

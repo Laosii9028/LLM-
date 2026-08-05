@@ -14,6 +14,24 @@ INDICES = {
     "^TNX": "美債 10 年殖利率",
 }
 
+WATCHLIST = {
+    "NVDA": "NVIDIA",
+    "AMD": "AMD",
+    "AVGO": "Broadcom",
+    "TSM": "台積電 ADR",
+    "ASML": "ASML",
+    "MU": "Micron",
+    "SMCI": "Supermicro",
+    "AAPL": "Apple",
+    "TSLA": "Tesla",
+    "MSFT": "Microsoft",
+    "GOOGL": "Alphabet",
+    "AMZN": "Amazon",
+    "META": "Meta",
+    "ARM": "Arm",
+    "QCOM": "Qualcomm",
+}
+
 
 def fetch_indices():
     """回傳每個指數的收盤與當日漲跌幅。"""
@@ -55,3 +73,28 @@ def fetch_gainers_losers(api_key, top_n=8):
     except Exception as e:
         print(f"[warn] 漲跌榜抓取失敗: {e}")
         return {"gainers": [], "losers": []}
+
+
+def fetch_watchlist():
+    """固定追蹤台股連動常用的大型美股,避免只看到全市場漲跌榜的小型股。"""
+    results = []
+    for symbol, name in WATCHLIST.items():
+        try:
+            hist = yf.Ticker(symbol).history(period="5d")
+            if len(hist) < 2:
+                continue
+            last_row = hist.iloc[-1]
+            prev_row = hist.iloc[-2]
+            last = float(last_row["Close"])
+            prev = float(prev_row["Close"])
+            pct = (last - prev) / prev * 100
+            results.append({
+                "ticker": symbol,
+                "name": name,
+                "close": round(last, 2),
+                "pct": round(pct, 2),
+                "volume": int(last_row.get("Volume", 0) or 0),
+            })
+        except Exception as e:
+            print(f"[warn] 追蹤股 {symbol} 抓取失敗: {e}")
+    return results
