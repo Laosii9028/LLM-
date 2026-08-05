@@ -1,1 +1,35 @@
-{}
+{
+  "NVDA": {
+    "stocks": [
+      "台積電 2330",
+      "廣達 2382",
+      "鴻海 2317"
+    ],
+    "reason": "NVIDIA 股價上漲，連動其台灣晶片代工與AI伺服器供應鏈表現。",
+    "first_seen": "2026-08-05",
+    "seen_count": 1,
+    "status": "candidate",
+    "last_seen": "2026-08-05"
+  },
+  "TSM": {
+    "stocks": [
+      "台積電 2330"
+    ],
+    "reason": "台積電 ADR 表現直接連動台股台積電現貨走勢。",
+    "first_seen": "2026-08-05",
+    "seen_count": 1,
+    "status": "candidate",
+    "last_seen": "2026-08-05"
+  },
+  "MU": {
+    "stocks": [
+      "南亞科 2408",
+      "華邦電 2344"
+    ],
+    "reason": "美光股價上漲，連動台灣記憶體晶片製造廠。",
+    "first_seen": "2026-08-05",
+    "seen_count": 1,
+    "status": "candidate",
+    "last_seen": "2026-08-05"
+  }
+}
