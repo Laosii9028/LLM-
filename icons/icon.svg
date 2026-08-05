@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#2E4B8B"/>
+  <rect x="64" y="64" width="384" height="384" rx="64" fill="#fff"/>
+  <rect x="112" y="112" width="288" height="288" rx="44" fill="#2E4B8B"/>
+  <text x="256" y="305" text-anchor="middle" font-size="188" font-weight="700" font-family="Arial, 'Microsoft JhengHei', sans-serif" fill="#fff">美</text>
+</svg>
