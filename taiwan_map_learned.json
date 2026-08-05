@@ -6,9 +6,9 @@
       "緯創 3231",
       "鴻海 2317"
     ],
-    "reason": "輝達股價強漲，連動其主要晶片代工與AI伺服器供應鏈",
+    "reason": "NVIDIA 為全球 AI 晶片龍頭，連動台積電晶圆代工及鴻海、廣達等 AI 伺服器代工供應鏈。",
     "first_seen": "2026-08-05",
-    "seen_count": 4,
+    "seen_count": 5,
     "status": "candidate",
     "last_seen": "2026-08-05"
   },
@@ -18,9 +18,9 @@
       "台積電 2330",
       "精材 3374"
     ],
-    "reason": "台積電 ADR 表現連動台股權值王台積電之現股走勢。",
+    "reason": "TSM 即為台積電美國 ADR，直接連動台積電台股表現。",
     "first_seen": "2026-08-05",
-    "seen_count": 4,
+    "seen_count": 5,
     "status": "candidate",
     "last_seen": "2026-08-05"
   },
@@ -31,9 +31,9 @@
       "群聯 8299",
       "華邦電 2344"
     ],
-    "reason": "美光股價強漲，有利於帶動台灣記憶體族群的市場氣氛。",
+    "reason": "美光為記憶體大廠，其報價與需求直接牽動台股記憶體與相關 IC 設計族群。",
     "first_seen": "2026-08-05",
-    "seen_count": 4,
+    "seen_count": 5,
     "status": "candidate",
     "last_seen": "2026-08-05"
   },
