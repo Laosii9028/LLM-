@@ -1,0 +1,3 @@
+yfinance
+requests
+google-genai
