@@ -15,8 +15,9 @@
 4. 抓美股重要新聞(含情緒標籤)
 5. **從新聞學習**新的「美股→台股」關聯,累積進 `taiwan_map_learned.json`
 6. 用 Gemini 分析:美股為什麼漲跌、發生了什麼;若沒有公司專屬新聞,會用量價與族群強弱做保守推論
-7. 根據「已驗證 + 候選」兩層對應表,判斷可能受影響的台股與方向
-8. 推送到 Discord
+7. 另外產生「美股分析」:整理新聞、可能造成動蕩的來源、族群輪動與潛力觀察名單
+8. 根據「已驗證 + 候選」兩層對應表,判斷可能受影響的台股與方向
+9. 推送到 Discord
 
 ---
 
@@ -133,13 +134,14 @@ python main.py
 一個單一 HTML 檔的網頁控制台,直接用瀏覽器打開就能用,也能架到 GitHub Pages。三個分頁:
 
 - **日報** — 看每天 / 歷史早報(資料來自 `briefs.json`)。
+- **美股分析** — 看美國新聞、量價與族群輪動可能造成的美股動蕩,以及潛力觀察名單(資料來自 `market_analysis.json`)。
 - **對應表** — 複審候選關聯,一鍵「升級」進已驗證表;也能刪除、手動新增。
   改完按「下載」把 `taiwan_map.json` / `taiwan_map_learned.json` 覆蓋回 repo 並 push。
 - **觸發執行** — 直接呼叫 GitHub Actions API 一鍵跑一次,也保留開啟 Actions 頁和本機執行指令。
 
 **載入資料兩種方式:**
-1. 在上方輸入 `你的帳號/repo`(需為公開 repo),按「從 GitHub 載入」——會自動抓那三個 JSON。
-2. 或按「選本機 JSON 檔」,直接選你電腦上的 `taiwan_map.json`、`taiwan_map_learned.json`、`briefs.json`。
+1. 在上方輸入 `你的帳號/repo`(需為公開 repo),按「從 GitHub 載入」——會自動抓控制台需要的 JSON。
+2. 或按「選本機 JSON 檔」,直接選你電腦上的 `taiwan_map.json`、`taiwan_map_learned.json`、`briefs.json`、`market_analysis.json`。
 
 > 網頁上的修改只在瀏覽器內;**一定要下載檔案、覆蓋回 repo 並 push,變更才會生效。**
 > 顏色用台股慣例:紅=漲、綠=跌。
@@ -166,6 +168,7 @@ news.py                      # 抓新聞
 learned.py                   # ★ 從新聞學習新關聯(免費 Gemini)
 analyze.py                   # Gemini 分析(兩層對應表 + prompt)
 briefs.py                    # 把每天早報存進 briefs.json
+market_analysis.json         # 美股分析歷史(控制台的美股分析資料來源)
 discord_notify.py            # Discord webhook 推送
 taiwan_map.py                # 讀取已驗證對應表
 taiwan_map.json              # ★ 已驗證對應表(手寫 / 從控制台升級)

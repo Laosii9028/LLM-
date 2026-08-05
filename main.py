@@ -76,8 +76,24 @@ def main():
     )
     body += "\n\n_本報告由程式自動彙整,僅供參考,非投資建議。_"
 
+    print("Gemini 美股動蕩分析中...")
+    market_analysis_body = analyze.build_us_market_analysis(
+        gemini_key,
+        analyze.fmt_indices(indices),
+        watchlist_text,
+        gainers_text,
+        losers_text,
+        news_text,
+    )
+    market_analysis_body += "\n\n_本分析用於整理市場線索與觀察方向,僅供參考,非投資建議。_"
+
     print("存入歷史紀錄...")
     briefs.save_brief(tw_now.strftime("%Y-%m-%d"), title, body)
+    briefs.save_market_analysis(
+        tw_now.strftime("%Y-%m-%d"),
+        f"🔎 美股分析 {tw_now.strftime('%Y/%m/%d')}",
+        market_analysis_body,
+    )
 
     print("推送到 Discord...")
     discord_notify.push(webhook, title, body)

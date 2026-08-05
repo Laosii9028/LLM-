@@ -74,6 +74,53 @@ PROMPT_TEMPLATE = """你是一位專業的美股與台股連動分析師。以�
 今天早上你只需要知道的一件事。
 """
 
+US_MARKET_ANALYSIS_PROMPT = """你是一位專業的美股市場策略分析師。以下是今天美股收盤後可用的「行情、量價訊號、漲跌榜與新聞」。
+請用繁體中文寫一份「美股分析」,目標是幫使用者找出可能造成美股動蕩的事件、族群與潛在觀察股票。
+
+重要規則:
+- 只根據提供的資料分析,不要虛構新聞、財報或數字。
+- 不要給買賣建議、目標價或保證式語氣。
+- 可以用量價、相對強弱、族群輪動做推論,但要清楚標示「量價推論」或「族群推論」。
+- 如果新聞和量價互相支持,請明確寫出「新聞 + 量價共振」。
+- 這份分析是找觀察方向,不是投資建議。
+
+# 美股指數表現
+{indices}
+
+# 重點追蹤美股量價訊號
+{watchlist}
+
+# 今日漲幅最大
+{gainers}
+
+# 今日跌幅最大
+{losers}
+
+# 今日重要新聞(含情緒標籤)
+{news}
+
+請依以下結構輸出:
+
+**一、今日美股動蕩來源**
+列 3-5 個可能造成市場波動的來源,例如利率、AI/半導體、科技巨頭、消費、電動車、避險情緒等。
+每一點說明它是「新聞支持」、「量價推論」或「新聞 + 量價共振」。
+
+**二、族群輪動與資金方向**
+根據 Nasdaq、SOX、VIX、美債殖利率與重點股相對強弱,判斷資金較可能流向或流出的族群。
+
+**三、潛力觀察名單**
+列 5-8 檔美股觀察名單,優先從重點追蹤美股與異常漲跌榜挑選。
+每檔格式:
+- 代號: 觀察理由; 可能催化因素; 主要風險
+只說「值得觀察的條件」,不要說應該買。
+
+**四、明日/短線風險雷達**
+列出接下來 1-3 個交易日需要注意的風險或確認訊號。
+
+**五、一句話結論**
+用一句話總結今天美股最值得追的主線。
+"""
+
 
 def fmt_indices(indices):
     if not indices:
@@ -161,4 +208,25 @@ def build_analysis(api_key, indices_text, watchlist_text, gainers_text, losers_t
         except Exception as e:
             last_error = e
             print(f"[warn] Gemini 分析模型 {model} 失敗,嘗試下一個: {e}")
+    raise last_error
+
+
+def build_us_market_analysis(api_key, indices_text, watchlist_text, gainers_text, losers_text, news_text):
+    client = genai.Client(api_key=api_key)
+    prompt = US_MARKET_ANALYSIS_PROMPT.format(
+        indices=indices_text,
+        watchlist=watchlist_text,
+        gainers=gainers_text,
+        losers=losers_text,
+        news=news_text,
+    )
+    last_error = None
+    for model in _model_candidates():
+        try:
+            print(f"使用 Gemini 美股分析模型: {model}")
+            resp = client.models.generate_content(model=model, contents=prompt)
+            return resp.text
+        except Exception as e:
+            last_error = e
+            print(f"[warn] Gemini 美股分析模型 {model} 失敗,嘗試下一個: {e}")
     raise last_error
