@@ -13,7 +13,7 @@ from datetime import datetime, timezone, timedelta
 from google import genai
 
 LEARNED_PATH = "taiwan_map_learned.json"
-MODEL = "gemini-2.0-flash"
+MODEL = "gemini-2.5-flash"
 
 EXTRACT_PROMPT = """根據以下今天的美股新聞與漲跌個股,找出「美股標的 → 台股供應鏈 / 連動股」的關聯。
 規則:
