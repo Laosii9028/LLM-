@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""把日報推送到 Discord。用 webhook,不需要架 bot。"""
+"""把日報推送到 Discord。用 webhook，不需要架 bot。"""
 
 import requests
 
@@ -7,7 +7,7 @@ MAX_DESC = 4000  # Discord embed description 上限約 4096，留點餘裕
 
 
 def _split(text, size):
-    """太長就依段落切成多則,避免超過 Discord 上限。"""
+    """太長就依段落切成多則，避免超過 Discord 上限。"""
     chunks, cur = [], ""
     for para in text.split("\n"):
         if len(cur) + len(para) + 1 > size:
@@ -20,7 +20,7 @@ def _split(text, size):
     return chunks or [text]
 
 
-def push(webhook_url, title, body):
+def push(webhook_url, title, body, dashboard_url=None):
     for i, chunk in enumerate(_split(body, MAX_DESC)):
         embed = {
             "title": title if i == 0 else f"{title}(續 {i + 1})",
@@ -28,4 +28,12 @@ def push(webhook_url, title, body):
             "color": 0x1D9E75,
         }
         r = requests.post(webhook_url, json={"embeds": [embed]}, timeout=30)
+        r.raise_for_status()
+
+    if dashboard_url:
+        r = requests.post(
+            webhook_url,
+            json={"content": f"🔗 最新網頁版：{dashboard_url}"},
+            timeout=30,
+        )
         r.raise_for_status()
