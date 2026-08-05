@@ -87,12 +87,30 @@ def main():
     )
     market_analysis_body += "\n\n_本分析用於整理市場線索與觀察方向,僅供參考,非投資建議。_"
 
+    print("Gemini 台股分析中...")
+    taiwan_analysis_body = analyze.build_taiwan_market_analysis(
+        gemini_key,
+        analyze.fmt_indices(indices),
+        watchlist_text,
+        gainers_text,
+        losers_text,
+        news_text,
+        verified_map_text(),
+        learned.as_prompt_text(learned_map),
+    )
+    taiwan_analysis_body += "\n\n_本分析用於整理台股連動線索與觀察方向,僅供參考,非投資建議。_"
+
     print("存入歷史紀錄...")
     briefs.save_brief(tw_now.strftime("%Y-%m-%d"), title, body)
     briefs.save_market_analysis(
         tw_now.strftime("%Y-%m-%d"),
         f"🔎 美股分析 {tw_now.strftime('%Y/%m/%d')}",
         market_analysis_body,
+    )
+    briefs.save_taiwan_analysis(
+        tw_now.strftime("%Y-%m-%d"),
+        f"🇹🇼 台股分析 {tw_now.strftime('%Y/%m/%d')}",
+        taiwan_analysis_body,
     )
 
     print("推送到 Discord...")

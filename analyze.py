@@ -121,6 +121,65 @@ US_MARKET_ANALYSIS_PROMPT = """你是一位專業的美股市場策略分析師�
 用一句話總結今天美股最值得追的主線。
 """
 
+TAIWAN_MARKET_ANALYSIS_PROMPT = """你是一位專業台股策略分析師。以下是美股收盤後可用的「美股指數、重點美股量價、美股新聞、台股連動對應表」。
+請用繁體中文寫一份「台股盤前分析」,目標是根據昨夜美股與新聞,推演今日台股可能走向、受影響族群、觀察股與開盤風險。
+
+重要規則:
+- 只根據提供資料與連動邏輯分析,不要虛構台股即時價格、籌碼或未提供的新聞。
+- 這是盤前推演,不是盤中看盤;不要給買賣建議、目標價或保證式語氣。
+- 台股個股請優先來自「已驗證對應表」;若使用候選對應表,需標示信心較低。
+- 若美股資料支持方向,請說明是哪個美股/指數/族群帶動。
+- 如果只有量價訊號、沒有新聞,請寫成「量價推論」或「族群推論」。
+
+# 美股指數表現
+{indices}
+
+# 重點追蹤美股量價訊號
+{watchlist}
+
+# 今日漲幅最大
+{gainers}
+
+# 今日跌幅最大
+{losers}
+
+# 今日重要新聞(含情緒標籤)
+{news}
+
+# 台股連動對應表 — 已驗證(高信任,優先採用)
+{map_verified}
+
+# 台股連動對應表 — 候選(信任較低)
+{map_learned}
+
+請依以下結構輸出:
+
+**一、今日台股開盤情境**
+用 3-5 句話判斷台股大盤可能偏多、偏空或震盪,並說明依據。
+
+**二、可能受惠族群**
+列 3-5 個族群,例如 AI伺服器、半導體、蘋概股、電動車、記憶體、網通等。
+每個族群說明:
+- 對應美股/指數來源
+- 偏多理由
+- 需要確認的風險
+
+**三、可能承壓族群**
+列 2-4 個可能承壓或需避開追高的族群,說明依據與風險。
+
+**四、台股潛力觀察名單**
+列 6-10 檔台股觀察名單,優先從已驗證對應表挑選。
+每檔格式:
+- 台股名稱 代號: 對應美股/主題; 觀察理由; 主要風險
+只說觀察條件,不要說應該買。
+
+**五、今日操作前檢查清單**
+列出開盤前要確認的 3-5 個訊號,例如台指期、匯率、ADR、SOX、相關美股盤後等。
+
+**六、一句話結論**
+用一句話總結今日台股最值得追蹤的主線。
+"""
+
 
 def fmt_indices(indices):
     if not indices:
@@ -229,4 +288,28 @@ def build_us_market_analysis(api_key, indices_text, watchlist_text, gainers_text
         except Exception as e:
             last_error = e
             print(f"[warn] Gemini 美股分析模型 {model} 失敗,嘗試下一個: {e}")
+    raise last_error
+
+
+def build_taiwan_market_analysis(api_key, indices_text, watchlist_text, gainers_text, losers_text,
+                                 news_text, map_verified_text, map_learned_text):
+    client = genai.Client(api_key=api_key)
+    prompt = TAIWAN_MARKET_ANALYSIS_PROMPT.format(
+        indices=indices_text,
+        watchlist=watchlist_text,
+        gainers=gainers_text,
+        losers=losers_text,
+        news=news_text,
+        map_verified=map_verified_text,
+        map_learned=map_learned_text,
+    )
+    last_error = None
+    for model in _model_candidates():
+        try:
+            print(f"使用 Gemini 台股分析模型: {model}")
+            resp = client.models.generate_content(model=model, contents=prompt)
+            return resp.text
+        except Exception as e:
+            last_error = e
+            print(f"[warn] Gemini 台股分析模型 {model} 失敗,嘗試下一個: {e}")
     raise last_error

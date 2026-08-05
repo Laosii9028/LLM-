@@ -6,6 +6,7 @@ import os
 
 BRIEFS_PATH = "briefs.json"
 MARKET_ANALYSIS_PATH = "market_analysis.json"
+TAIWAN_ANALYSIS_PATH = "taiwan_analysis.json"
 MAX_KEEP = 60  # 只保留最近 60 天
 
 
@@ -33,3 +34,7 @@ def save_brief(date, title, body):
 
 def save_market_analysis(date, title, body):
     _save_history(MARKET_ANALYSIS_PATH, date, title, body)
+
+
+def save_taiwan_analysis(date, title, body):
+    _save_history(TAIWAN_ANALYSIS_PATH, date, title, body)

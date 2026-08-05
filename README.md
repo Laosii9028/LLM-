@@ -16,8 +16,9 @@
 5. **從新聞學習**新的「美股→台股」關聯,累積進 `taiwan_map_learned.json`
 6. 用 Gemini 分析:美股為什麼漲跌、發生了什麼;若沒有公司專屬新聞,會用量價與族群強弱做保守推論
 7. 另外產生「美股分析」:整理新聞、可能造成動蕩的來源、族群輪動與潛力觀察名單
-8. 根據「已驗證 + 候選」兩層對應表,判斷可能受影響的台股與方向
-9. 推送到 Discord
+8. 另外產生「台股分析」:根據美股收盤、新聞、量價與連動表,整理台股今日可能走向、受惠/承壓族群、觀察名單與風險
+9. 根據「已驗證 + 候選」兩層對應表,判斷可能受影響的台股與方向
+10. 推送到 Discord
 
 ---
 
@@ -135,6 +136,7 @@ python main.py
 
 - **日報** — 看每天 / 歷史早報(資料來自 `briefs.json`)。
 - **美股分析** — 看美國新聞、量價與族群輪動可能造成的美股動蕩,以及潛力觀察名單(資料來自 `market_analysis.json`)。
+- **台股分析** — 看台股今日可能走向、開盤情境、受惠/承壓族群與觀察名單(資料來自 `taiwan_analysis.json`)。
 - **對應表** — 複審候選關聯,一鍵「升級」進已驗證表;也能刪除、手動新增。
   改完按「下載」把 `taiwan_map.json` / `taiwan_map_learned.json` 覆蓋回 repo 並 push。
 - **觸發執行** — 直接呼叫 GitHub Actions API 一鍵跑一次,也保留開啟 Actions 頁和本機執行指令。
@@ -168,18 +170,19 @@ news.py                      # 抓新聞
 learned.py                   # ★ 從新聞學習新關聯(免費 Gemini)
 analyze.py                   # Gemini 分析(兩層對應表 + prompt)
 briefs.py                    # 把每天早報存進 briefs.json
-market_analysis.json         # 美股分析歷史(控制台的美股分析資料來源)
 discord_notify.py            # Discord webhook 推送
 taiwan_map.py                # 讀取已驗證對應表
 taiwan_map.json              # ★ 已驗證對應表(手寫 / 從控制台升級)
 taiwan_map_learned.json      # 候選對應表(程式自動累積)
 briefs.json                  # 早報歷史(控制台的日報資料來源)
+market_analysis.json         # 美股分析歷史
+taiwan_analysis.json         # 台股分析歷史
 dashboard.html               # ★ 網頁控制台(瀏覽器開)
 index.html                   # GitHub Pages 入口,自動導到 dashboard.html
 manifest.webmanifest         # PWA 安裝資訊
 service-worker.js            # PWA 快取外殼
 icons/                       # PWA app icon
-.github/workflows/daily.yml  # 每日排程 + 把上述 JSON commit 回 repo
+.github/workflows/daily.yml  # 每日早報/美股分析/台股分析 + commit JSON
 ```
 
 ---

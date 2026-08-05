@@ -164,7 +164,7 @@
       <div class="mark">美</div>
       <div>
         <h1>美股台股連動控制台</h1>
-        <div class="sub">daily brief · 美股分析 · 連動對應表 · 手動觸發</div>
+        <div class="sub">daily brief · 美股分析 · 台股分析 · 連動對應表 · 手動觸發</div>
       </div>
     </div>
     <div class="legend"><span class="dot up"></span>紅漲 <span class="dot down"></span>綠跌 <span style="color:var(--faint)">· 台股慣例</span></div>
@@ -186,6 +186,7 @@
 <nav class="tabs" role="tablist">
   <button class="tab active" data-tab="briefs" role="tab">日報</button>
   <button class="tab" data-tab="analysis" role="tab">美股分析</button>
+  <button class="tab" data-tab="taiwan" role="tab">台股分析</button>
   <button class="tab" data-tab="map" role="tab">對應表<span class="badge" id="candBadge" hidden>0</span></button>
   <button class="tab" data-tab="run" role="tab">觸發執行</button>
 </nav>
@@ -213,6 +214,18 @@
     <div class="briefs-grid" id="analysisGrid" hidden>
       <div class="brief-list" id="analysisList"></div>
       <div class="panel brief-body" id="analysisBody"></div>
+    </div>
+  </section>
+
+  <!-- ============ 台股分析 ============ -->
+  <section class="view" id="view-taiwan" role="tabpanel">
+    <div id="taiwanEmpty" class="empty">
+      <div class="big">還沒有台股分析紀錄</div>
+      程式每天早上跑過一次後,<code>taiwan_analysis.json</code> 會整理台股今日可能走向、族群、觀察名單與風險。
+    </div>
+    <div class="briefs-grid" id="taiwanGrid" hidden>
+      <div class="brief-list" id="taiwanList"></div>
+      <div class="panel brief-body" id="taiwanBody"></div>
     </div>
   </section>
 
@@ -292,7 +305,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const state = { verified:{}, learned:{}, briefs:[], marketAnalyses:[], repo:"", branch:"main" };
+const state = { verified:{}, learned:{}, briefs:[], marketAnalyses:[], taiwanAnalyses:[], repo:"", branch:"main" };
 
 const $ = s => document.querySelector(s);
 const esc = s => (s||"").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -325,7 +338,7 @@ async function loadFromGitHub(){
   if(!/^[\w.-]+\/[\w.-]+$/.test(repo)){ toast("格式應為 帳號/repo"); return; }
   state.repo = repo;
   const base = `https://raw.githubusercontent.com/${repo}/${state.branch}/`;
-  const files = { verified:"taiwan_map.json", learned:"taiwan_map_learned.json", briefs:"briefs.json", marketAnalyses:"market_analysis.json" };
+  const files = { verified:"taiwan_map.json", learned:"taiwan_map_learned.json", briefs:"briefs.json", marketAnalyses:"market_analysis.json", taiwanAnalyses:"taiwan_analysis.json" };
   let loaded = 0;
   for(const [k,name] of Object.entries(files)){
     try{
@@ -333,6 +346,7 @@ async function loadFromGitHub(){
       if(r.ok){ state[k] = await r.json(); loaded++; }
       else if(k==="briefs"){ state.briefs = []; }
       else if(k==="marketAnalyses"){ state.marketAnalyses = []; }
+      else if(k==="taiwanAnalyses"){ state.taiwanAnalyses = []; }
     }catch(e){ /* file may not exist yet */ }
   }
   location.hash = "repo="+encodeURIComponent(repo);
@@ -347,6 +361,7 @@ async function loadFromFiles(e){
       const data = JSON.parse(await f.text());
       if(f.name.includes("learned")) state.learned = data;
       else if(f.name.includes("market_analysis")) state.marketAnalyses = data;
+      else if(f.name.includes("taiwan_analysis")) state.taiwanAnalyses = data;
       else if(f.name.includes("briefs")) state.briefs = data;
       else if(f.name.includes("map")) state.verified = data;
     }catch(err){ toast(f.name+" 解析失敗"); }
@@ -356,13 +371,14 @@ async function loadFromFiles(e){
 }
 
 /* ---------- render ---------- */
-function renderAll(){ renderStatus(); renderBriefs(); renderMarketAnalysis(); renderMap(); }
+function renderAll(){ renderStatus(); renderBriefs(); renderMarketAnalysis(); renderTaiwanAnalysis(); renderMap(); }
 
 function renderStatus(){
   const nc = Object.keys(state.learned||{}).length;
   const nb = (state.briefs||[]).length;
   const na = (state.marketAnalyses||[]).length;
-  $("#status").innerHTML = `已驗證 <b>${Object.keys(state.verified||{}).length}</b> · 早報 <b>${nb}</b> · 美股分析 <b>${na}</b>`
+  const nt = (state.taiwanAnalyses||[]).length;
+  $("#status").innerHTML = `已驗證 <b>${Object.keys(state.verified||{}).length}</b> · 早報 <b>${nb}</b> · 美股分析 <b>${na}</b> · 台股分析 <b>${nt}</b>`
     + (nc? ` · 待複審<span class="pill">${nc}</span>` : "");
   const badge = $("#candBadge");
   if(nc){ badge.hidden=false; badge.textContent=nc; } else badge.hidden=true;
@@ -404,6 +420,24 @@ function renderMarketAnalysis(){
 }
 function showMarketAnalysis(b){ $("#analysisBody").innerHTML =
   `<div class="meta">${esc(b.date)} · ${esc(b.title||"美股分析")}</div>` + mdBrief(b.body||""); }
+
+function renderTaiwanAnalysis(){
+  const list = state.taiwanAnalyses||[];
+  $("#taiwanEmpty").hidden = list.length>0;
+  $("#taiwanGrid").hidden = list.length===0;
+  const lc = $("#taiwanList"); lc.innerHTML="";
+  list.forEach((b,i)=>{
+    const btn=document.createElement("button");
+    btn.className="brief-item"+(i===0?" active":"");
+    btn.textContent=b.date;
+    btn.onclick=()=>{ document.querySelectorAll("#taiwanList .brief-item").forEach(x=>x.classList.remove("active"));
+      btn.classList.add("active"); showTaiwanAnalysis(b); };
+    lc.appendChild(btn);
+  });
+  if(list.length) showTaiwanAnalysis(list[0]);
+}
+function showTaiwanAnalysis(b){ $("#taiwanBody").innerHTML =
+  `<div class="meta">${esc(b.date)} · ${esc(b.title||"台股分析")}</div>` + mdBrief(b.body||""); }
 
 function mdBrief(text){
   const lines = text.split("\n"); let html=""; let inList=false;
