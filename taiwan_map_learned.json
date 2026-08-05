@@ -5,9 +5,9 @@
       "廣達 2382",
       "鴻海 2317"
     ],
-    "reason": "NVIDIA 股價上漲，連動其台灣晶片代工與AI伺服器供應鏈表現。",
+    "reason": "輝達股價強漲帶動其台廠晶圓代工與AI伺服器供應鏈",
     "first_seen": "2026-08-05",
-    "seen_count": 1,
+    "seen_count": 2,
     "status": "candidate",
     "last_seen": "2026-08-05"
   },
@@ -15,18 +15,31 @@
     "stocks": [
       "台積電 2330"
     ],
-    "reason": "台積電 ADR 表現直接連動台股台積電現貨走勢。",
+    "reason": "台積電ADR連動台股現貨表現",
     "first_seen": "2026-08-05",
-    "seen_count": 1,
+    "seen_count": 2,
     "status": "candidate",
     "last_seen": "2026-08-05"
   },
   "MU": {
     "stocks": [
       "南亞科 2408",
+      "威剛 3260",
       "華邦電 2344"
     ],
-    "reason": "美光股價上漲，連動台灣記憶體晶片製造廠。",
+    "reason": "美光股價上漲帶動記憶體族群連動表現",
+    "first_seen": "2026-08-05",
+    "seen_count": 2,
+    "status": "candidate",
+    "last_seen": "2026-08-05"
+  },
+  "AAPL": {
+    "stocks": [
+      "台積電 2330",
+      "大立光 3008",
+      "鴻海 2317"
+    ],
+    "reason": "蘋果供應鏈相關代工與光學元件廠",
     "first_seen": "2026-08-05",
     "seen_count": 1,
     "status": "candidate",
