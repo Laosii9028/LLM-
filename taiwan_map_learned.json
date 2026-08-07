@@ -6,11 +6,11 @@
       "緯創 3231",
       "鴻海 2317"
     ],
-    "reason": "輝達股價強勢與AI晶片需求帶動台灣晶圓代工與AI伺服器供應鏈",
+    "reason": "輝達短線動能強勁，帶動台灣AI伺服器供應鏈",
     "first_seen": "2026-08-05",
-    "seen_count": 6,
+    "seen_count": 7,
     "status": "candidate",
-    "last_seen": "2026-08-06"
+    "last_seen": "2026-08-07"
   },
   "TSM": {
     "stocks": [
@@ -18,11 +18,11 @@
       "台積電 2330",
       "精材 3374"
     ],
-    "reason": "台積電ADR連動台股現貨表現",
+    "reason": "台積電ADR上漲，連動台股權王台積電表現",
     "first_seen": "2026-08-05",
-    "seen_count": 6,
+    "seen_count": 7,
     "status": "candidate",
-    "last_seen": "2026-08-06"
+    "last_seen": "2026-08-07"
   },
   "MU": {
     "stocks": [
@@ -41,13 +41,14 @@
     "stocks": [
       "台積電 2330",
       "大立光 3008",
+      "玉晶光 3406",
       "鴻海 2317"
     ],
-    "reason": "蘋果供應鏈相關代工與光學元件廠",
+    "reason": "蘋果股價變動牽動台股相關蘋概股供應鏈",
     "first_seen": "2026-08-05",
-    "seen_count": 1,
+    "seen_count": 2,
     "status": "candidate",
-    "last_seen": "2026-08-05"
+    "last_seen": "2026-08-07"
   },
   "ANET": {
     "stocks": [
@@ -59,5 +60,27 @@
     "seen_count": 1,
     "status": "candidate",
     "last_seen": "2026-08-06"
+  },
+  "AVGO": {
+    "stocks": [
+      "台積電 2330",
+      "智邦 2345"
+    ],
+    "reason": "博通強勢帶動網通及半導體代工供應鏈",
+    "first_seen": "2026-08-07",
+    "seen_count": 1,
+    "status": "candidate",
+    "last_seen": "2026-08-07"
+  },
+  "AMD": {
+    "stocks": [
+      "欣興 3037",
+      "緯創 3231"
+    ],
+    "reason": "AMD股價變動連動相關概念與載板供應商",
+    "first_seen": "2026-08-07",
+    "seen_count": 1,
+    "status": "candidate",
+    "last_seen": "2026-08-07"
   }
 }
